@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // console.log(listToTree([
+      //     "h3",
+      //     "h2", "h3",
+      //     "h1", "h2", "h3", "h3", "h2", "h3",
+      //     "h1", "h2", "h4", "h2", "h3"
+      // ]))
+
+      //上面转成下面
+
+      // [
+      //   { naem: 'h3', child: [] },
+      //   { name: 'h2', child:
+      //     [
+      //       { name: 'h3', child: []}
+      //     ]
+      //   }
+      //   ....
+      // ];
+
+      function listToTree(arr) {
+        const root = [];
+        if (arr === null || arr.length === 0) {
+          return [];
+        }
+
+        function TreeNode(name) {
+          this.name = name;
+          this.child = [];
+        }
+
+        function generateTree(start, end) {
+          const node = new TreeNode(arr[start]);
+          node.child = listToTree(arr.slice(start + 1, end + 1));
+
+          return node;
+        }
+
+        function core(start, end) {
+          let fast = start;
+          let slow = start;
+          while (fast <= end) {
+            fast++;
+            while (fast <= end && arr[fast].slice(1) > arr[slow].slice(1)) {
+              fast++;
+            }
+            root.push(generateTree(slow, fast - 1));
+            slow = fast;
+          }
+        }
+
+        core(0, arr.length - 1);
+
+        return root;
+      }
+
+      console.log(
+        listToTree([
+          "h3",
+          "h2",
+          "h3",
+          "h1",
+          "h2",
+          "h3",
+          "h3",
+          "h2",
+          "h3",
+          "h1",
+          "h2",
+          "h4",
+          "h2",
+          "h3",
+        ])
+      );
+    </script>
+  </body>
+</html>
